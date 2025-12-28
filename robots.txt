@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Allow all important files and directories
+Allow: /index.html
+Allow: /index.css
+Allow: /index.js
+Allow: /favicon.png
+Allow: /design*.jpg
+Allow: /bedroom*.jpg
+Allow: /kitchen*.jpg
+Allow: /dining*.jpg
+Allow: /study*.jpg
+
+# Block unnecessary files
+Disallow: /*.json$
+Disallow: /*.txt$
+Disallow: /private/
+Disallow: /admin/
+Disallow: /temp/
+Disallow: /*?*
+
+# Sitemap location
+Sitemap: https://studio6interiors.com/sitemap.xml
+
+# Crawl delay for good bot behavior
+Crawl-delay: 1
