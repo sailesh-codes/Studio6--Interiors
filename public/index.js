@@ -12514,15 +12514,104 @@ function Sv(f) {
     ],
   })(f);
 }
+// Theme context and provider for light/dark mode
+const ThemeContext = We.createContext({ theme: "dark", toggleTheme: () => {} });
+
+const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = We.useState("dark");
+
+  const applyTheme = (next) => {
+    if (typeof document === "undefined") return;
+    const body = document.body;
+    if (!body) return;
+    if (next === "light") {
+      body.style.backgroundColor = "#ffffff";
+      body.style.color = "#111111";
+    } else {
+      body.style.backgroundColor = "#000000";
+      body.style.color = "#ffffff";
+    }
+  };
+
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        window.localStorage.setItem("theme", next);
+      } catch {}
+    }
+    applyTheme(next);
+  };
+
+  We.useEffect(() => {
+    let initial = "dark";
+    try {
+      const saved = window.localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") initial = saved;
+    } catch {}
+    setTheme(initial);
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-theme", initial);
+    }
+    applyTheme(initial);
+  }, []);
+
+  return s.jsx(ThemeContext.Provider, {
+    value: { theme, toggleTheme },
+    children,
+  });
+};
+
+const ThemeToggle = () => {
+  const { theme, toggleTheme } = We.useContext(ThemeContext);
+  return s.jsx("button", {
+    onClick: toggleTheme,
+    className:
+      "ml-4 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-primary bg-transparent border border-primary/60",
+    "aria-label": theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
+    children:
+      theme === "dark"
+        ? s.jsx("svg", {
+            xmlns: "http://www.w3.org/2000/svg",
+            className: "h-5 w-5 text-yellow-300",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            stroke: "currentColor",
+            children: s.jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: 2,
+              d: "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z",
+            }),
+          })
+        : s.jsx("svg", {
+            xmlns: "http://www.w3.org/2000/svg",
+            className: "h-5 w-5 text-gray-800",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            stroke: "currentColor",
+            children: s.jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: 2,
+              d: "M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z",
+            }),
+          }),
+  });
+};
+
 const Ac = [
     { name: "Home", href: "#hero" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "Pricing", href: "#offer-packages" },
     { name: "About", href: "#about-us" },
+    { name: "Pricing", href: "#offer-packages" },
     { name: "Gallery", href: "#room-gallery" },
+    { name: "How It Works", href: "#how-it-works" },
   ],
   Ov = [
     { name: "Home", Icon: gv, href: "#hero" },
+    { name: "About", Icon: xv, href: "#about-us" },
     { name: "Pricing", Icon: pv, href: "#offer-packages" },
     { name: "Gallery", Icon: Sv, href: "#room-gallery" },
     { name: "Menu", Icon: xv, href: "#menu" },
@@ -17344,7 +17433,7 @@ yh = [
         {
           title: "Kitchen",
           description: [
-            "Bottom Cabinets, Overhead Cabinets, Accessories - 5NO Chimney.faber",
+            "Bottom Cabinets, Overhead Cabinets, Accessories - 5NO Chimney-faber",
           ],
         },
       ],
@@ -17359,12 +17448,12 @@ yh = [
       content: [
         {
           title: "Living Room",
-          description: ["Premium TV display unit", "Pooja prayer unit"],
+          description: ["Premium TV display unit", "Pooja/prayer unit"],
         },
         {
           title: "Dining Room",
           description: [
-            "Grocery unit with glass and Shutters",
+            "Crokery unit with glass and Shutters",
             "Customised partition for hall & Dinning",
           ],
         },
@@ -17401,7 +17490,7 @@ yh = [
             "Bottom Cabinets",
             "Top Cabinets",
             "Accessories - 5NO",
-            "Chimney.faber",
+            "Chimney-faber",
           ],
         },
       ],
@@ -17426,7 +17515,7 @@ yh = [
         {
           title: "Dining Room",
           description: [
-            "Grocery unit with glass Shutters",
+            "Crokery unit with glass Shutters",
             "Wash unit with projected mirror",
             "Customised living & dinning partition",
           ],
@@ -17595,7 +17684,7 @@ w1 = () => {
                             children: s.jsx("img", {
                               src: B.src,
                               alt: B.name,
-                              className: "w-full h-full object-cover mb-4",
+                              className: "w-full h-full object-cover mb-4 transition-transform duration-500 ease-in-out transform hover:scale-105 hover:shadow-lg",
                             }),
                           }),
                           s.jsxs("div", {
@@ -17714,7 +17803,7 @@ w1 = () => {
                             s.jsx("img", {
                               src: B.src,
                               alt: B.name,
-                              className: "w-full h-full object-cover mb-4",
+                              className: "w-full h-full object-cover mb-4 transition-transform duration-500 ease-in-out transform hover:scale-105 hover:shadow-lg",
                             }),
                             s.jsxs("div", {
                               className:
@@ -18919,16 +19008,17 @@ function V1() {
     children: [
       s.jsx(jv, {}),
       s.jsx(c1, {}),
-      s.jsx(b1, {}),
-      s.jsx(g1, {}),
-      s.jsx(w1, {}),
       s.jsx(Z1, {}),
+      s.jsx(w1, {}),
       s.jsx(T1, {}),
       s.jsx(B1, {}),
+      s.jsx(b1, {}),
+      s.jsx(g1, {}),
       s.jsx(N1, {}),
       s.jsx(M1, {}),
       s.jsx(X1, {}),
       s.jsx(L1, {}),
+      
     ],
   });
 }

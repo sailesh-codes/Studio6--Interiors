@@ -12514,15 +12514,69 @@ function Sv(f) {
     ],
   })(f);
 }
+// Theme context
+const ThemeContext = We.createContext({
+  theme: 'dark',
+  toggleTheme: () => {}
+});
+
+// Theme provider component
+const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = We.useState('dark');
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  We.useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// Theme toggle button component
+const ThemeToggle = () => {
+  const { theme, toggleTheme } = We.useContext(ThemeContext);
+  
+  return (
+    <button
+      onClick={toggleTheme}
+      className="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {theme === 'dark' ? (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      )}
+    </button>
+  );
+};
+
 const Ac = [
     { name: "Home", href: "#hero" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "Pricing", href: "#offer-packages" },
     { name: "About", href: "#about-us" },
+    { name: "Pricing", href: "#offer-packages" },
     { name: "Gallery", href: "#room-gallery" },
+    { name: "How It Works", href: "#how-it-works" },
   ],
   Ov = [
     { name: "Home", Icon: gv, href: "#hero" },
+    { name: "About", Icon: xv, href: "#about-us" },
     { name: "Pricing", Icon: pv, href: "#offer-packages" },
     { name: "Gallery", Icon: Sv, href: "#room-gallery" },
     { name: "Menu", Icon: xv, href: "#menu" },
@@ -17344,7 +17398,7 @@ yh = [
         {
           title: "Kitchen",
           description: [
-            "Bottom Cabinets, Overhead Cabinets, Accessories - 5NO Chimney-faber",
+            "Bottom Cabinets, Overhead Cabinets, Accessories - 5NO Chimney - faber",
           ],
         },
       ],
@@ -17595,7 +17649,7 @@ w1 = () => {
                             children: s.jsx("img", {
                               src: B.src,
                               alt: B.name,
-                              className: "w-full h-full object-cover mb-4",
+                              className: "w-full h-full object-cover mb-4 transition-transform duration-500 ease-in-out transform hover:scale-105 hover:shadow-lg",
                             }),
                           }),
                           s.jsxs("div", {
@@ -18915,20 +18969,20 @@ const A1 = [
       }),
     });
 function V1() {
-  return s.jsxs(s.Fragment, {
+    children: s.jsxs(s.Fragment, {
     children: [
       s.jsx(jv, {}),
       s.jsx(c1, {}),
-      s.jsx(b1, {}),
+      s.jsx(Z1, {}),
       s.jsx(g1, {}),
       s.jsx(w1, {}),
-      s.jsx(Z1, {}),
       s.jsx(T1, {}),
       s.jsx(B1, {}),
       s.jsx(N1, {}),
       s.jsx(M1, {}),
       s.jsx(X1, {}),
       s.jsx(L1, {}),
+      s.jsx(b1, {}),
     ],
   });
 }
